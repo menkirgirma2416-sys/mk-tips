@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./assets/images/mk-tips-logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MK Tips — Your Guide to Global Opportunities</title>
+    <meta name="description" content="Discover global opportunities, understand requirements, prepare application documents, and get guidance to build a stronger application with MK Tips." />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- React 18 & Babel Standalone -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+      :root {
+        --font-heading: 'Outfit', sans-serif;
+        --font-body: 'Plus Jakarta Sans', sans-serif;
+      }
+      body {
+        font-family: var(--font-body);
+        background-color: #f8fafc;
+        color: #0f172a;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-heading);
+      }
+      .bg-navy-gradient {
+        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #172554 100%);
+      }
+      .opportunity-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .opportunity-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+
+      const INITIAL_OPPORTUNITIES = [
+        {
+          id: "opp-open-doors-russia",
+          name: "Open Doors Russian Scholarship Project",
+          provider: "Global Universities Association & Russian Federation",
+          country: "Russia",
+          type: "Scholarship",
+          degree_level: "Master's",
+          field_of_study: "Computer Science, Engineering, Physics, Economics",
+          eligible_countries: "Ethiopia and all international applicants",
+          opening_date: "2026-09-15",
+          deadline: "2026-12-10",
+          status: "Upcoming",
+          application_fee: false,
+          fee_amount: 0,
+          fee_status: "No Application Fee",
+          alternative_english_accepted: true,
+          moi_accepted: true,
+          english_requirements: "Competitions conducted in English or Russian.",
+          funding_type: "Fully Funded",
+          stipend: "State monthly living stipend",
+          description: "Fully funded Russian government scholarship for Master's and PhD studies at top Russian universities with 100% tuition coverage and direct admission.",
+          official_website: "https://od.globaluni.ru/",
+          application_link: "https://od.globaluni.ru/en/#register",
+          featured: true,
+          published: true
+        },
+        {
+          id: "opp-hungary-stipendium",
+          name: "Stipendium Hungaricum Scholarship Programme",
+          provider: "Tempus Public Foundation / Hungarian Government",
+          country: "Hungary",
+          type: "Scholarship",
+          degree_level: "Bachelor's",
+          field_of_study: "Mechanical Engineering, Computer Science, Economics",
+          eligible_countries: "Ethiopia (sending partner territory), Kenya, Ghana, Nigeria",
+          opening_date: "2026-11-15",
+          deadline: "2027-01-15",
+          status: "Upcoming",
+          application_fee: false,
+          fee_amount: 0,
+          fee_status: "No Application Fee",
+          alternative_english_accepted: true,
+          moi_accepted: true,
+          english_requirements: "Medium of Instruction (MOI) Certificate explicitly accepted for verified programmes (e.g. BSc Mechanical Engineering BME).",
+          funding_type: "Fully Funded",
+          stipend: "HUF 43,700 - HUF 140,000 / month",
+          description: "Full Hungarian government scholarship covering 100% tuition, monthly allowance, and dormitory housing.",
+          official_website: "https://stipendiumhungaricum.hu/",
+          application_link: "https://apply.stipendiumhungaricum.hu/",
+          featured: true,
+          published: true
+        },
+        {
+          id: "opp-erasmus-mundus",
+          name: "Erasmus Mundus Joint Masters Scholarships",
+          provider: "European Union / EACEA",
+          country: "Multiple (European Union)",
+          type: "Scholarship",
+          degree_level: "Master's",
+          field_of_study: "Engineering, AI, Environment, Data Science, Humanities",
+          eligible_countries: "Ethiopia, All African Nations, Asia, Americas (Worldwide)",
+          opening_date: "2026-10-01",
+          deadline: "2027-01-15",
+          deadline_display: "Deadline varies by programme",
+          status: "Upcoming",
+          application_fee: false,
+          fee_amount: 0,
+          fee_status: "No Application Fee",
+          alternative_english_accepted: true,
+          moi_accepted: true,
+          english_requirements: "Varies by individual Master's programme. Some accept MOI letters; others require IELTS/TOEFL.",
+          funding_type: "Fully Funded",
+          stipend: "€1,400 / month",
+          description: "Joint Master's degree across multiple European universities with €1,400 monthly living stipend and travel grants.",
+          official_website: "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/erasmus-mundus-joint-masters",
+          application_link: "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/erasmus-mundus-joint-masters",
+          featured: true,
+          published: true
+        },
+        {
+          id: "opp-chevening-uk",
+          name: "Chevening UK Government Scholarships",
+          provider: "UK Foreign, Commonwealth & Development Office",
+          country: "United Kingdom",
+          type: "Scholarship",
+          degree_level: "Master's",
+          field_of_study: "All Academic Fields",
+          eligible_countries: "Ethiopia and over 160 Chevening countries",
+          opening_date: "2026-09-08",
+          deadline: "2026-11-03",
+          status: "Upcoming",
+          application_fee: false,
+          fee_amount: 0,
+          fee_status: "No Application Fee",
+          alternative_english_accepted: false,
+          moi_accepted: false,
+          english_requirements: "Chevening no longer enforces a central English test requirement; applicants must meet chosen UK university criteria.",
+          funding_type: "Fully Funded",
+          stipend: "£1,350 - £1,650 / month",
+          description: "Full UK government award for a 1-year Master's degree. Covers 100% tuition, monthly stipend, flights, and visa fees.",
+          official_website: "https://www.chevening.org/",
+          application_link: "https://www.chevening.org/apply/",
+          featured: true,
+          published: true
+        },
+        {
+          id: "opp-swiss-government",
+          name: "Swiss Government Excellence Scholarships (PhD & Research)",
+          provider: "SERI Switzerland",
+          country: "Switzerland",
+          type: "Scholarship",
+          degree_level: "PhD",
+          field_of_study: "All Fields (ETH Zurich, EPFL, Swiss Universities)",
+          eligible_countries: "Ethiopia and over 180 partner countries",
+          opening_date: "2026-08-01",
+          deadline: "2026-11-15",
+          status: "Open",
+          application_fee: false,
+          fee_amount: 0,
+          fee_status: "No Application Fee",
+          alternative_english_accepted: true,
+          moi_accepted: true,
+          english_requirements: "Language of host university; professor supervision letter required.",
+          funding_type: "Fully Funded",
+          stipend: "CHF 1,920 - CHF 3,500 / month",
+          description: "Swiss government research awards for PhD and Postdoctoral scholars at ETH Zurich, EPFL, and Swiss public universities.",
+          official_website: "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+          application_link: "https://www.sbfi.admin.ch/sbfi/en/home/education/scholarships-and-grants/swiss-government-excellence-scholarships.html",
+          featured: true,
+          published: true
+        }
+      ];
+
+      function App() {
+        const [activePage, setActivePage] = useState('Home');
+        const [searchQuery, setSearchQuery] = useState('');
+        
+        // Multi-Attribute Filter States
+        const [selectedType, setSelectedType] = useState('All');
+        const [selectedLevel, setSelectedLevel] = useState('All');
+        const [selectedFunding, setSelectedFunding] = useState('All');
+        const [selectedFee, setSelectedFee] = useState('All');
+        const [selectedEnglish, setSelectedEnglish] = useState('All');
+        const [selectedCountry, setSelectedCountry] = useState('All');
+        const [selectedDeadline, setSelectedDeadline] = useState('All');
+
+        const [selectedOpp, setSelectedOpp] = useState(null);
+        
+        // Admin Portal States
+        const [isAdminOpen, setIsAdminOpen] = useState(false);
+        const [adminPassword, setAdminPassword] = useState('');
+        const [adminAuth, setAdminAuth] = useState(false);
+        const [adminTab, setAdminTab] = useState('list');
+        const [editingId, setEditingId] = useState(null);
+
+        // Persistent Database State
+        const [opportunities, setOpportunities] = useState(() => {
+          const saved = localStorage.getItem('mk_tips_opportunities');
+          if (saved) { try { return JSON.parse(saved); } catch (e) { return INITIAL_OPPORTUNITIES; } }
+          return INITIAL_OPPORTUNITIES;
+        });
+
+        useEffect(() => {
+          localStorage.setItem('mk_tips_opportunities', JSON.stringify(opportunities));
+        }, [opportunities]);
+
+        const resetFilters = () => {
+          setSelectedType('All');
+          setSelectedLevel('All');
+          setSelectedFunding('All');
+          setSelectedFee('All');
+          setSelectedEnglish('All');
+          setSelectedCountry('All');
+          setSelectedDeadline('All');
+          setSearchQuery('');
+        };
+
+        const initialFormState = {
+          name: '',
+          provider: '',
+          type: 'Scholarship',
+          country: '',
+          eligible_countries: 'Ethiopia and all international applicants',
+          degree_level: "Master's",
+          field_of_study: '',
+          funding_type: 'Fully Funded',
+          fee_status: 'No Application Fee',
+          english_requirements: '',
+          moi_accepted: false,
+          opening_date: '',
+          deadline: '',
+          status: 'Open',
+          description: '',
+          full_description: '',
+          eligibility_criteria: '',
+          benefits: '',
+          required_documents: '',
+          application_process: '',
+          official_website: '',
+          application_link: '',
+          featured: false,
+          published: true
+        };
+
+        const [formData, setFormData] = useState(initialFormState);
+
+        const handleSaveOpportunity = (e) => {
+          e.preventDefault();
+          const oppData = {
+            ...formData,
+            id: editingId || `opp-custom-${Date.now()}`,
+            application_fee: formData.fee_status === 'Application Fee Required',
+            fee_amount: formData.fee_status === 'No Application Fee' ? 0 : 50,
+            last_verified: new Date().toISOString().split('T')[0]
+          };
+
+          if (editingId) {
+            setOpportunities(prev => prev.map(o => o.id === editingId ? oppData : o));
+          } else {
+            setOpportunities(prev => [oppData, ...prev]);
+          }
+
+          setFormData(initialFormState);
+          setEditingId(null);
+          setAdminTab('list');
+        };
+
+        const handleStartEdit = (opp) => {
+          setEditingId(opp.id);
+          setFormData({ ...initialFormState, ...opp });
+          setAdminTab('edit');
+        };
+
+        const handleDeleteOpp = (id) => {
+          if (confirm('Are you sure you want to delete this opportunity record permanently?')) {
+            setOpportunities(prev => prev.filter(o => o.id !== id));
+          }
+        };
+
+        const handleTogglePublish = (id) => {
+          setOpportunities(prev => prev.map(o => o.id === id ? { ...o, published: o.published === false ? true : false } : o));
+        };
+
+        const handleToggleFeature = (id) => {
+          setOpportunities(prev => prev.map(o => o.id === id ? { ...o, featured: !o.featured } : o));
+        };
+
+        const today = new Date();
+
+        const filtered = opportunities.filter(opp => {
+          if (opp.published === false) return false;
+          
+          if (selectedType !== 'All' && opp.type !== selectedType) return false;
+          if (selectedLevel !== 'All' && opp.degree_level !== selectedLevel) return false;
+          if (selectedFunding !== 'All' && !opp.funding_type.toLowerCase().includes(selectedFunding.toLowerCase())) return false;
+          if (selectedFee !== 'All') {
+            if (selectedFee === 'No Application Fee' && (opp.application_fee || opp.fee_amount > 0)) return false;
+            if (selectedFee === 'Application Fee Required' && !opp.application_fee) return false;
+          }
+          if (selectedEnglish !== 'All') {
+            if (selectedEnglish === 'MOI / Alternative English Proof' && !opp.moi_accepted) return false;
+          }
+          if (selectedCountry !== 'All' && !opp.country.toLowerCase().includes(selectedCountry.toLowerCase())) return false;
+
+          if (searchQuery.trim() !== '') {
+            const q = searchQuery.toLowerCase();
+            return (opp.name && opp.name.toLowerCase().includes(q)) || 
+                   (opp.country && opp.country.toLowerCase().includes(q)) || 
+                   (opp.provider && opp.provider.toLowerCase().includes(q)) ||
+                   (opp.field_of_study && opp.field_of_study.toLowerCase().includes(q));
+          }
+          return true;
+        });
+
+        const activeFilterCount = (selectedType !== 'All' ? 1 : 0) + 
+                                  (selectedLevel !== 'All' ? 1 : 0) + 
+                                  (selectedFunding !== 'All' ? 1 : 0) + 
+                                  (selectedFee !== 'All' ? 1 : 0) + 
+                                  (selectedEnglish !== 'All' ? 1 : 0) + 
+                                  (selectedCountry !== 'All' ? 1 : 0) + 
+                                  (selectedDeadline !== 'All' ? 1 : 0) +
+                                  (searchQuery.trim() !== '' ? 1 : 0);
+
+        return (
+          <div className="min-h-screen flex flex-col">
+            {/* Top Announcement Bar */}
+            <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+              <div className="bg-slate-900 text-white text-xs py-2 px-4 text-center flex flex-wrap items-center justify-center gap-3">
+                <span>🎓 <strong>MK Tips</strong> — Your Guide to Global Opportunities | Discover • Prepare • Apply • Achieve</span>
+                <div className="flex gap-2">
+                  <a href="https://t.me/mktips1224" target="_blank" rel="noopener" className="bg-sky-500 text-white px-2.5 py-0.5 rounded-full font-bold">✈️ Join Telegram</a>
+                  <a href="https://forms.gle/gwHnj7gJvWNfUMSH7" target="_blank" rel="noopener" className="bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full font-extrabold">Apply With Us ↗</a>
+                </div>
+              </div>
+
+              {/* Navbar */}
+              <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+                <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActivePage('Home')}>
+                  <img 
+                    src="./assets/images/mk-tips-logo.png" 
+                    alt="MK Tips Official Logo" 
+                    onError={(e) => { e.target.src = './public/assets/images/mk-tips-logo.png'; }}
+                    className="h-14 object-contain" 
+                  />
+                </div>
+
+                <nav className="hidden md:flex items-center gap-1">
+                  {[
+                    { id: 'Home', label: 'HOME' },
+                    { id: 'Opportunities', label: 'OPPORTUNITIES' },
+                    { id: 'Services', label: 'SERVICES' },
+                    { id: 'ApplyWithUs', label: 'APPLY WITH US' },
+                    { id: 'Ebooks', label: 'MK EBOOKS' },
+                    { id: 'About', label: 'ABOUT' },
+                    { id: 'Contact', label: 'CONTACT' }
+                  ].map((page) => (
+                    <button
+                      key={page.id}
+                      onClick={() => setActivePage(page.id)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all ${activePage === page.id ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:text-blue-600'}`}
+                    >
+                      {page.label}
+                    </button>
+                  ))}
+                </nav>
+
+                <div className="flex items-center gap-2">
+                  <button onClick={() => setIsAdminOpen(true)} className="bg-slate-900 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl">
+                    🔐 Admin Portal
+                  </button>
+                  <a href="https://forms.gle/6EermLr5nm9ef3y98" target="_blank" rel="noopener" className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow">
+                    Apply Now ↗
+                  </a>
+                </div>
+              </div>
+            </header>
+
+            {/* PAGE 1: OPPORTUNITIES */}
+            {activePage === 'Opportunities' && (
+              <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-8">
+                {/* Visual Filter Panel */}
+                <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-2xl font-extrabold text-slate-900">Opportunity Finder & Filters</h2>
+                        {activeFilterCount > 0 && (
+                          <span className="bg-blue-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full">{activeFilterCount} Active</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500">Filter verified scholarships, fellowships, internships, conferences, and courses ({filtered.length} results).</p>
+                    </div>
+
+                    {activeFilterCount > 0 && (
+                      <button onClick={resetFilters} className="bg-red-50 text-red-600 border border-red-200 font-extrabold text-xs px-3.5 py-1.5 rounded-xl">
+                        Clear Filters
+                      </button>
+                    )}
+                  </div>
+
+                  {/* 7 Filter Select Controls */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-bold">
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase mb-1">Opportunity Type</label>
+                      <select value={selectedType} onChange={(e) => setSelectedType(e.target.value)} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold bg-slate-50">
+                        <option value="All">All Types</option>
+                        <option value="Scholarship">Scholarships</option>
+                        <option value="Fellowship">Fellowships</option>
+                        <option value="Internship">Internships</option>
+                        <option value="Conference">Conferences</option>
+                        <option value="Online Course">Online Courses</option>
+                        <option value="Grant">Grants</option>
+                        <option value="Exchange Program">Exchange Programs</option>
+                        <option value="Research Opportunity">Research Opportunities</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase mb-1">Study Level</label>
+                      <select value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold bg-slate-50">
+                        <option value="All">All Levels</option>
+                        <option value="Bachelor's">Bachelor's</option>
+                        <option value="Master's">Master's</option>
+                        <option value="PhD">PhD</option>
+                        <option value="Postdoctoral">Postdoctoral</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase mb-1">Funding</label>
+                      <select value={selectedFunding} onChange={(e) => setSelectedFunding(e.target.value)} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold bg-slate-50">
+                        <option value="All">All Funding</option>
+                        <option value="Fully Funded">Fully Funded</option>
+                        <option value="Partially Funded">Partially Funded</option>
+                        <option value="Tuition Fee Only">Tuition Fee Only</option>
+                        <option value="Stipend">Stipend Only</option>
+                        <option value="Free">Free</option>
+                        <option value="Unfunded">Unfunded</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] text-slate-400 uppercase mb-1">Application Fee</label>
+                      <select value={selectedFee} onChange={(e) => setSelectedFee(e.target.value)} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold bg-slate-50">
+                        <option value="All">All Fees</option>
+                        <option value="No Application Fee">No Application Fee ($0)</option>
+                        <option value="Application Fee Required">Application Fee Required</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {filtered.map(opp => {
+                    const daysLeft = Math.ceil((new Date(opp.deadline) - today) / (1000 * 60 * 60 * 24));
+                    return (
+                      <div key={opp.id} className="opportunity-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <span className="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-lg">📍 {opp.country}</span>
+                            <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg">{opp.type}</span>
+                          </div>
+                          <h3 onClick={() => setSelectedOpp(opp)} className="text-lg font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer mb-2 leading-snug">
+                            {opp.name}
+                          </h3>
+                          <p className="text-xs font-semibold text-slate-500 mb-3">🏛️ {opp.provider}</p>
+                          <p className="text-xs text-slate-600 mb-4 line-clamp-3 leading-relaxed">"{opp.description}"</p>
+                        </div>
+                        <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                          <div>
+                            <div className="text-xs font-bold text-slate-700">📅 {opp.deadline_display || opp.deadline}</div>
+                            <div className="text-xs font-semibold text-blue-600">{opp.deadline_display ? 'Program Specific' : `${daysLeft} days left`}</div>
+                          </div>
+                          <button onClick={() => setSelectedOpp(opp)} className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs">
+                            View Details →
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 2: SERVICES (COLOR-ACCENTED HERO & CARDS MATCHING APPLY WITH US PAGE) */}
+            {activePage === 'Services' && (
+              <main className="max-w-7xl mx-auto px-4 py-10 flex-1 w-full space-y-8">
+                {/* Hero Banner matching Apply With Us page styling */}
+                <div className="bg-slate-900 text-white rounded-3xl p-8 max-w-7xl mx-auto text-left relative overflow-hidden shadow-xl">
+                  <div className="max-w-3xl space-y-3">
+                    <span className="bg-blue-600 text-white text-xs font-extrabold px-3.5 py-1 rounded-full inline-block">
+                      ✨ MK TIPS GUIDANCE SERVICES
+                    </span>
+                    <h2 className="text-3xl font-extrabold text-white">Our Services</h2>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Practical guidance and structured application support to help you navigate admissions, scholarships, document preparation, and visa stages with clarity and confidence.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    { title: "University Application & Admission", badge: "ADMISSION SUPPORT", color: "blue", desc: "University selection & admission portal guidance.", link: "https://forms.gle/gwHnj7gJvWNfUMSH7", text: "Apply With Us Form ↗", isTg: false },
+                    { title: "Personal Mentorship", badge: "1-ON-1 GUIDANCE", color: "emerald", desc: "1-on-1 strategy & application planning.", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true },
+                    { title: "Document Preparation Support", badge: "AUTHENTIC PROFILES", color: "amber", desc: "CV, motivation letter & recommendation formatting.", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true },
+                    { title: "Full Application Support", badge: "END-TO-END", color: "purple", desc: "End-to-end guidance to portal submission.", link: "https://forms.gle/gwHnj7gJvWNfUMSH7", text: "Apply With MK Tips ↗", isTg: false },
+                    { title: "Embassy & Visa Preparation", badge: "VISA STAGE", color: "pink", desc: "Visa checklist, financial docs & interview prep.", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true }
+                  ].map((s, idx) => (
+                    <div key={idx} className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between space-y-4">
+                      <div>
+                        <span className={`text-[10px] font-extrabold px-2.5 py-1 rounded-lg inline-block mb-2 bg-${s.color}-50 text-${s.color}-700 border border-${s.color}-200`}>
+                          {s.badge}
+                        </span>
+                        <h3 className="text-lg font-extrabold text-slate-900 mb-2">{s.title}</h3>
+                        <p className="text-xs text-slate-600 leading-relaxed mb-4">{s.desc}</p>
+                      </div>
+                      <a href={s.link} target="_blank" rel="noopener" className={`font-extrabold px-4 py-3 rounded-xl text-xs text-center shadow-md ${s.isTg ? 'bg-sky-500 text-white' : 'bg-blue-600 text-white'}`}>
+                        {s.text}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 3: APPLY WITH US */}
+            {activePage === 'ApplyWithUs' && (
+              <main className="max-w-7xl mx-auto px-4 py-10 flex-1 w-full space-y-10">
+                <div className="bg-slate-900 text-white rounded-3xl p-8 max-w-4xl mx-auto text-center space-y-4">
+                  <span className="bg-amber-500 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full">APPLICATION SUPPORT & GUIDANCE</span>
+                  <h2 className="text-3xl font-extrabold text-white">Apply With MK Tips</h2>
+                  <p className="text-slate-300 text-sm max-w-xl mx-auto">
+                    Submit your details for personalized guidance on university admissions, tuition waivers, and regional fully funded scholarships.
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-4">
+                    <a href="https://forms.gle/6EermLr5nm9ef3y98" target="_blank" rel="noopener" className="bg-amber-500 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-sm shadow-lg">
+                      1. Italian Scholarship Form ↗
+                    </a>
+                    <a href="https://forms.gle/gwHnj7gJvWNfUMSH7" target="_blank" rel="noopener" className="bg-blue-600 text-white font-extrabold px-6 py-3 rounded-xl text-sm shadow-lg">
+                      2. General Support Form ↗
+                    </a>
+                  </div>
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 4: MK EBOOKS */}
+            {activePage === 'Ebooks' && (
+              <main className="max-w-7xl mx-auto px-4 py-10 flex-1 w-full space-y-10">
+                {/* Hero Banner matching Apply With Us page styling */}
+                <div className="bg-slate-900 text-white rounded-3xl p-8 max-w-7xl mx-auto text-left relative overflow-hidden shadow-xl">
+                  <div className="max-w-3xl space-y-3">
+                    <span className="bg-amber-500 text-slate-950 text-xs font-extrabold px-3.5 py-1 rounded-full inline-block">
+                      ✨ PRACTICAL EDUCATIONAL GUIDES
+                    </span>
+                    <h2 className="text-3xl font-extrabold text-white">MK Ebooks & Guides</h2>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Structured step-by-step e-books created to guide applicants through European university admissions, scholarship applications, document preparation, and visa procedures.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white border border-blue-200 rounded-3xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-4xl mx-auto shadow-sm">
+                  <div className="text-center">
+                    <img 
+                      src="./assets/images/mk-ebook-cover.png" 
+                      alt="MK Ebooks Volume 1" 
+                      onError={(e) => { e.target.src = './public/assets/images/mk-ebook-cover.png'; }}
+                      className="max-w-xs mx-auto rounded-2xl shadow-xl border border-slate-200" 
+                    />
+                  </div>
+                  <div>
+                    <span className="bg-amber-500 text-slate-950 text-xs font-extrabold px-3 py-1 rounded-full">VOLUME 1</span>
+                    <h2 className="text-2xl font-extrabold text-slate-900 mt-3 mb-3 leading-snug">
+                      A-Z Step by Step Guide to Fully Funded Scholarships in Italy & France
+                    </h2>
+                    <p className="text-sm text-slate-600 mb-6 leading-relaxed">
+                      Comprehensive step-by-step guide with official scholarship links, no English proficiency certificate strategies, zero application fee opportunities, and practical guidance.
+                    </p>
+                    <a href="https://ye-buna.com/mktips" target="_blank" rel="noopener" className="bg-blue-600 text-white font-extrabold px-6 py-3 rounded-xl text-sm inline-block shadow-md">
+                      Get the Ebook (Ye-Buna) ↗
+                    </a>
+                  </div>
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 5: ABOUT MK TIPS (WITH OFFICIAL LOGO HEADER) */}
+            {activePage === 'About' && (
+              <main className="max-w-4xl mx-auto px-4 py-10 flex-1 w-full space-y-8">
+                {/* Hero Banner matching Apply With Us page styling */}
+                <div className="bg-slate-900 text-white rounded-3xl p-8 text-center space-y-4 shadow-xl">
+                  <img 
+                    src="./assets/images/mk-tips-logo.png" 
+                    alt="MK Tips Official Logo" 
+                    onError={(e) => { e.target.src = './public/assets/images/mk-tips-logo.png'; }}
+                    className="h-16 mx-auto object-contain mb-2" 
+                  />
+                  <h2 className="text-3xl font-extrabold text-white">About MK Tips</h2>
+                  <p className="text-sky-300 text-xs font-extrabold uppercase tracking-wider">Your Guide to Global Opportunities — Discover • Prepare • Apply • Achieve</p>
+                </div>
+
+                <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm space-y-6">
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    MK Tips is an educational guidance platform focused on helping Ethiopian students and applicants discover and pursue international scholarships, fellowships, internships, conferences, online courses and other educational opportunities.
+                  </p>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    Our mission is to make international education opportunities easier to discover and understand for Ethiopian students and applicants.
+                  </p>
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 6: CONTACT */}
+            {activePage === 'Contact' && (
+              <main className="max-w-4xl mx-auto px-4 py-10 flex-1 w-full space-y-8">
+                {/* Hero Banner matching Apply With Us page styling */}
+                <div className="bg-slate-900 text-white rounded-3xl p-8 text-center space-y-3 shadow-xl">
+                  <span className="bg-sky-400 text-slate-950 text-xs font-extrabold px-3.5 py-1 rounded-full inline-block">
+                    ✈️ CONNECT WITH MK TIPS
+                  </span>
+                  <h2 className="text-3xl font-extrabold text-white">Contact & Community</h2>
+                  <p className="text-slate-300 text-xs">Connect with MK Tips across official channels for continuous opportunity updates.</p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {[
+                    { title: "Official Telegram Channel", subtitle: "@mktips1224", badge: "COMMUNITY", link: "https://t.me/mktips1224", text: "Join Telegram ✈️", bg: "bg-sky-500" },
+                    { title: "Personal Telegram Contact", subtitle: "@Mk_8958", badge: "DIRECT MESSAGE", link: "https://t.me/Mk_8958", text: "Message Me ✈️", bg: "bg-slate-900" },
+                    { title: "Official TikTok Account", subtitle: "@scholarship2112", badge: "VIDEO GUIDES", link: "https://www.tiktok.com/@scholarship2112?_r=1&_t=ZS-98lyiYFivae", text: "Follow on TikTok ↗", bg: "bg-black" }
+                  ].map((c, idx) => (
+                    <div key={idx} className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between text-center space-y-4">
+                      <div>
+                        <span className="bg-slate-100 text-slate-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md inline-block mb-2">{c.badge}</span>
+                        <h3 className="text-base font-extrabold text-slate-900">{c.title}</h3>
+                        <span className="text-xs font-bold text-blue-600 block mt-1">{c.subtitle}</span>
+                      </div>
+                      <a href={c.link} target="_blank" rel="noopener" className={`${c.bg} text-white font-extrabold px-4 py-2.5 rounded-xl text-xs shadow-md`}>
+                        {c.text}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </main>
+            )}
+
+            {/* PAGE 7: HOMEPAGE */}
+            {activePage === 'Home' && (
+              <main className="max-w-7xl mx-auto px-4 py-8 flex-1 w-full space-y-12">
+                {/* 1. Hero Section */}
+                <section className="bg-navy-gradient text-white py-14 px-6 rounded-3xl text-center relative overflow-hidden shadow-xl">
+                  <div className="max-w-4xl mx-auto relative z-10">
+                    <span className="inline-block bg-white/10 backdrop-blur border border-white/20 px-4 py-1 rounded-full text-xs font-bold text-amber-400 mb-3">
+                      ✨ MK TIPS — YOUR GUIDE TO GLOBAL OPPORTUNITIES
+                    </span>
+                    <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-2">
+                      Your Guide to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-amber-400">Global Opportunities</span>
+                    </h2>
+                    <p className="text-xs font-bold text-sky-400 tracking-widest uppercase mb-6">Discover • Prepare • Apply • Achieve</p>
+
+                    <div className="flex justify-center gap-3">
+                      <button onClick={() => setActivePage('Opportunities')} className="bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-6 py-3 rounded-xl text-xs shadow-lg">
+                        Explore Opportunities →
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 2. Opportunity Finder Preview */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 flex items-center justify-between flex-wrap gap-4 shadow-sm">
+                  <div>
+                    <h3 className="text-xl font-extrabold text-slate-900">Opportunity Finder</h3>
+                    <p className="text-xs text-slate-500">Filter scholarships, fellowships, internships, conferences, and courses.</p>
+                  </div>
+                  <button onClick={() => setActivePage('Opportunities')} className="bg-blue-600 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs">
+                    Launch Finder →
+                  </button>
+                </div>
+
+                {/* 3. Featured Opportunities */}
+                <div>
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-6">Featured Opportunities</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {opportunities.slice(0, 6).map(opp => (
+                      <div key={opp.id} className="opportunity-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-3">
+                            <span className="bg-slate-100 text-slate-700 text-xs font-bold px-2.5 py-1 rounded-lg">📍 {opp.country}</span>
+                            <span className="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-lg">{opp.type}</span>
+                          </div>
+                          <h4 onClick={() => setSelectedOpp(opp)} className="text-base font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer mb-2 leading-snug">
+                            {opp.name}
+                          </h4>
+                          <p className="text-xs font-semibold text-slate-500 mb-3">🏛️ {opp.provider}</p>
+                          <p className="text-xs text-slate-600 mb-4 line-clamp-3 leading-relaxed">"{opp.description}"</p>
+                        </div>
+                        <button onClick={() => setSelectedOpp(opp)} className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs">
+                          View Details →
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 4. Latest Opportunities */}
+                <div>
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-6">Latest Opportunities</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {opportunities.slice(0, 6).map(opp => (
+                      <div key={opp.id} className="opportunity-card bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                          <h4 onClick={() => setSelectedOpp(opp)} className="text-base font-extrabold text-slate-900 hover:text-blue-600 cursor-pointer mb-2 leading-snug">
+                            {opp.name}
+                          </h4>
+                          <p className="text-xs text-slate-500 mb-3">🏛️ {opp.provider}</p>
+                        </div>
+                        <button onClick={() => setSelectedOpp(opp)} className="bg-blue-600 text-white font-bold px-4 py-2 rounded-xl text-xs">
+                          View Details →
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 5. Deadline Tracker */}
+                <div className="bg-amber-50 border border-amber-200 rounded-3xl p-8 space-y-4">
+                  <h3 className="text-2xl font-extrabold text-slate-900">Deadline Tracker</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {opportunities.slice(0, 3).map(opp => (
+                      <div key={opp.id} className="bg-white p-4 rounded-xl border border-amber-200">
+                        <strong className="text-xs text-slate-900 block">{opp.name}</strong>
+                        <span className="text-xs text-amber-700 font-bold block mt-1">📅 Deadline: {opp.deadline}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 6. Services */}
+                <div>
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-6">Services</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[
+                      { title: "University Application & Admission", link: "https://forms.gle/gwHnj7gJvWNfUMSH7", text: "Apply Form ↗", isTg: false },
+                      { title: "Personal Mentorship", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true },
+                      { title: "Document Preparation Support", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true },
+                      { title: "Full Application Support", link: "https://forms.gle/gwHnj7gJvWNfUMSH7", text: "Apply Form ↗", isTg: false },
+                      { title: "Embassy & Visa Preparation", link: "https://t.me/Mk_8958", text: "Contact Me on Telegram ✈️", isTg: true }
+                    ].map((s, idx) => (
+                      <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                        <h4 className="text-base font-extrabold text-slate-900 mb-4">{s.title}</h4>
+                        <a href={s.link} target="_blank" rel="noopener" className={`font-bold px-4 py-2 rounded-xl text-xs text-center ${s.isTg ? 'bg-sky-500 text-white' : 'bg-blue-600 text-white'}`}>
+                          {s.text}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 7. MK Ebooks */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center shadow-sm">
+                  <div className="text-center">
+                    <img 
+                      src="./assets/images/mk-ebook-cover.png" 
+                      alt="MK Ebooks Volume 1" 
+                      onError={(e) => { e.target.src = './public/assets/images/mk-ebook-cover.png'; }}
+                      className="max-w-xs mx-auto rounded-2xl shadow-xl border border-slate-200" 
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-slate-900 mb-2">MK Ebooks</h3>
+                    <p className="text-sm text-slate-600 mb-6">A-Z Step by Step Guide to Fully Funded Scholarships in Italy & France.</p>
+                    <a href="https://ye-buna.com/mktips" target="_blank" rel="noopener" className="bg-blue-600 text-white font-extrabold px-6 py-3 rounded-xl text-sm inline-block">
+                      Get the Ebook (Ye-Buna) ↗
+                    </a>
+                  </div>
+                </div>
+
+                {/* 8. About MK Tips (WITH OFFICIAL LOGO DISPLAY) */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-sm space-y-4">
+                  <div className="flex items-center gap-4 border-b border-slate-100 pb-4">
+                    <img 
+                      src="./assets/images/mk-tips-logo.png" 
+                      alt="MK Tips Logo" 
+                      onError={(e) => { e.target.src = './public/assets/images/mk-tips-logo.png'; }}
+                      className="h-10 object-contain" 
+                    />
+                    <h3 className="text-2xl font-extrabold text-slate-900">About MK Tips</h3>
+                  </div>
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    MK Tips is an educational guidance platform focused on helping Ethiopian students and applicants discover and pursue international scholarships, fellowships, internships, conferences, online courses and other educational opportunities.
+                  </p>
+                  <button onClick={() => setActivePage('About')} className="bg-slate-900 text-white font-bold px-5 py-2.5 rounded-xl text-xs">
+                    Read About MK Tips →
+                  </button>
+                </div>
+
+                {/* 9. Telegram / Contact CTA */}
+                <div className="bg-sky-500 text-white rounded-3xl p-8 text-center space-y-4 shadow-lg">
+                  <h3 className="text-2xl font-extrabold">Connect With MK Tips on Telegram</h3>
+                  <a href="https://t.me/mktips1224" target="_blank" rel="noopener" className="bg-white text-sky-600 font-extrabold px-6 py-3 rounded-xl text-sm inline-block">
+                    Join Telegram Channel @mktips1224 ↗
+                  </a>
+                </div>
+              </main>
+            )}
+
+            {/* Opportunity Details Modal */}
+            {selectedOpp && (
+              <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div className="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+                  <button onClick={() => setSelectedOpp(null)} className="absolute top-4 right-4 bg-slate-100 w-8 h-8 rounded-full font-bold">✕</button>
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-2">{selectedOpp.name}</h3>
+                  <p className="text-sm text-slate-500 mb-4">🏛️ {selectedOpp.provider} • 📍 {selectedOpp.country}</p>
+                  <p className="text-sm text-slate-700 mb-4">{selectedOpp.description}</p>
+                  <div className="flex gap-3">
+                    <a href={selectedOpp.official_website} target="_blank" rel="noopener" className="bg-slate-100 text-slate-800 font-bold px-4 py-2.5 rounded-xl text-xs">
+                      Official Website ↗
+                    </a>
+                    <a href={selectedOpp.application_link} target="_blank" rel="noopener" className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-xl text-xs">
+                      Apply Officially ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* REAL WORKING ADMIN PORTAL MODAL */}
+            {isAdminOpen && (
+              <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+                <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+                  <button onClick={() => setIsAdminOpen(false)} className="absolute top-4 right-4 bg-slate-100 w-8 h-8 rounded-full font-bold">✕</button>
+                  <h3 className="text-2xl font-extrabold text-slate-900 mb-1">MK Tips Admin Management Engine</h3>
+                  <p className="text-xs text-slate-500 mb-4">Real-time local database manager ({opportunities.length} total records)</p>
+
+                  {!adminAuth ? (
+                    <div className="space-y-4 max-w-md mx-auto py-6">
+                      <div className="text-center">
+                        <span className="text-3xl">🔐</span>
+                        <h4 className="text-lg font-bold text-slate-900 mt-2">Admin Authentication</h4>
+                      </div>
+                      <input
+                        type="password"
+                        value={adminPassword}
+                        onChange={(e) => setAdminPassword(e.target.value)}
+                        placeholder="Admin Password (mktips2026)"
+                        className="w-full border border-slate-300 p-3 rounded-xl text-sm font-semibold outline-none"
+                      />
+                      <button
+                        onClick={() => {
+                          if (adminPassword === 'mktips2026' || adminPassword === 'admin') setAdminAuth(true);
+                          else alert('Incorrect Admin Password');
+                        }}
+                        className="w-full bg-slate-900 text-white font-extrabold py-3 rounded-xl text-sm"
+                      >
+                        Authenticate Access
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      <div className="flex border-b border-slate-200 gap-4">
+                        <button onClick={() => setAdminTab('list')} className={`pb-3 text-xs font-extrabold border-b-2 ${adminTab === 'list' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500'}`}>
+                          All Records ({opportunities.length})
+                        </button>
+                        <button onClick={() => { setEditingId(null); setFormData(initialFormState); setAdminTab('add'); }} className={`pb-3 text-xs font-extrabold border-b-2 ${adminTab === 'add' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500'}`}>
+                          + Add Opportunity Record
+                        </button>
+                      </div>
+
+                      {adminTab === 'list' && (
+                        <div className="space-y-3">
+                          {opportunities.map(opp => (
+                            <div key={opp.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                              <div>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded ${opp.published !== false ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}`}>
+                                    {opp.published !== false ? 'PUBLISHED' : 'DRAFT'}
+                                  </span>
+                                  {opp.featured && (
+                                    <span className="bg-amber-100 text-amber-800 text-[10px] font-extrabold px-2 py-0.5 rounded">★ FEATURED</span>
+                                  )}
+                                  <span className="text-xs font-bold text-slate-500">{opp.type} • {opp.country}</span>
+                                </div>
+                                <h4 className="text-sm font-extrabold text-slate-900">{opp.name}</h4>
+                                <span className="text-xs text-slate-500">Deadline: {opp.deadline} | Status: <strong>{opp.status}</strong></span>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                <button onClick={() => handleToggleFeature(opp.id)} className="bg-white border border-slate-300 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-bold">
+                                  {opp.featured ? 'Unfeature' : 'Feature'}
+                                </button>
+                                <button onClick={() => handleTogglePublish(opp.id)} className="bg-white border border-slate-300 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-bold">
+                                  {opp.published !== false ? 'Unpublish' : 'Publish'}
+                                </button>
+                                <button onClick={() => handleStartEdit(opp)} className="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-bold">
+                                  Edit
+                                </button>
+                                <button onClick={() => handleDeleteOpp(opp.id)} className="bg-red-100 text-red-600 px-2.5 py-1 rounded-lg text-xs font-bold">
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {(adminTab === 'add' || adminTab === 'edit') && (
+                        <form onSubmit={handleSaveOpportunity} className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-semibold text-slate-700">
+                          <div className="md:col-span-2">
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Opportunity Name *</label>
+                            <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Organization / Provider *</label>
+                            <input type="text" required value={formData.provider} onChange={(e) => setFormData({ ...formData, provider: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Country *</label>
+                            <input type="text" required value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Eligible Countries</label>
+                            <input type="text" value={formData.eligible_countries} onChange={(e) => setFormData({ ...formData, eligible_countries: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Opportunity Type *</label>
+                            <select value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold">
+                              <option value="Scholarship">Scholarship</option>
+                              <option value="Fellowship">Fellowship</option>
+                              <option value="Internship">Internship</option>
+                              <option value="Conference">Conference</option>
+                              <option value="Online Course">Online Course</option>
+                              <option value="Grant">Grant</option>
+                              <option value="Exchange Program">Exchange Program</option>
+                              <option value="Research Opportunity">Research Opportunity</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Study Level *</label>
+                            <select value={formData.degree_level} onChange={(e) => setFormData({ ...formData, degree_level: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold">
+                              <option value="Bachelor's">Bachelor's</option>
+                              <option value="Master's">Master's</option>
+                              <option value="PhD">PhD</option>
+                              <option value="Postdoctoral">Postdoctoral</option>
+                              <option value="Professional">Professional</option>
+                              <option value="Other">Other / Multiple</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Field / Subject</label>
+                            <input type="text" value={formData.field_of_study} onChange={(e) => setFormData({ ...formData, field_of_study: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Funding Type *</label>
+                            <select value={formData.funding_type} onChange={(e) => setFormData({ ...formData, funding_type: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold">
+                              <option value="Fully Funded">Fully Funded</option>
+                              <option value="Partially Funded">Partially Funded</option>
+                              <option value="Tuition Fee Only">Tuition Fee Only</option>
+                              <option value="Stipend Only">Stipend Only</option>
+                              <option value="Free">Free</option>
+                              <option value="Unfunded">Unfunded</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Application Fee *</label>
+                            <select value={formData.fee_status} onChange={(e) => setFormData({ ...formData, fee_status: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold">
+                              <option value="No Application Fee">No Application Fee ($0)</option>
+                              <option value="Application Fee Required">Application Fee Required</option>
+                              <option value="Not Specified">Not Specified</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">English Requirement</label>
+                            <input type="text" value={formData.english_requirements} onChange={(e) => setFormData({ ...formData, english_requirements: e.target.value })} placeholder="e.g. MOI Accepted or IELTS 6.5" className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Opening Date</label>
+                            <input type="date" value={formData.opening_date} onChange={(e) => setFormData({ ...formData, opening_date: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Deadline Date *</label>
+                            <input type="date" required value={formData.deadline} onChange={(e) => setFormData({ ...formData, deadline: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold" />
+                          </div>
+                          <div>
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Status *</label>
+                            <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value })} className="w-full border border-slate-300 p-2.5 rounded-xl font-bold">
+                              <option value="Open">OPEN</option>
+                              <option value="Upcoming">UPCOMING</option>
+                              <option value="Closed">CLOSED</option>
+                            </select>
+                          </div>
+                          <div className="md:col-span-2">
+                            <label className="block text-[11px] font-extrabold text-slate-500 uppercase mb-1">Brief Description (Card Summary) *</label>
+                            <textarea required rows="2" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} placeholder="Brief summary displayed on cards..." className="w-full border border-slate-300 p-2.5 rounded-xl" />
+                          </div>
+                          <div className="md:col-span-2 flex flex-wrap gap-4 items-center py-2">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={formData.moi_accepted} onChange={(e) => setFormData({ ...formData, moi_accepted: e.target.checked })} className="w-4 h-4" />
+                              <span>MOI / Medium of Instruction Accepted</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} className="w-4 h-4" />
+                              <span>Feature on Homepage</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} className="w-4 h-4" />
+                              <span>Publish Immediately</span>
+                            </label>
+                          </div>
+                          <div className="md:col-span-2 flex justify-end gap-3 pt-4 border-t border-slate-200">
+                            <button type="button" onClick={() => setAdminTab('list')} className="bg-slate-100 text-slate-700 px-4 py-2.5 rounded-xl font-bold text-xs">Cancel</button>
+                            <button type="submit" className="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-extrabold text-xs shadow-md">Save Opportunity Record</button>
+                          </div>
+                        </form>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <footer className="bg-slate-900 text-white py-12 border-t border-slate-800 text-xs text-slate-400">
+              <div className="max-w-7xl mx-auto px-4 space-y-6 text-center">
+                <img 
+                  src="./assets/images/mk-tips-logo.png" 
+                  alt="MK Tips Logo" 
+                  onError={(e) => { e.target.src = './public/assets/images/mk-tips-logo.png'; }}
+                  className="max-h-14 mx-auto object-contain mb-2" 
+                />
+                <p className="text-sm font-bold text-white">MK Tips — Your Guide to Global Opportunities</p>
+                <div className="flex justify-center gap-6 text-slate-300">
+                  <a href="https://t.me/mktips1224" target="_blank" rel="noopener">Telegram Channel</a>
+                  <a href="https://t.me/Mk_8958" target="_blank" rel="noopener">Telegram Contact</a>
+                  <a href="https://www.tiktok.com/@scholarship2112?_r=1&_t=ZS-98lyiYFivae" target="_blank" rel="noopener">TikTok</a>
+                  <a href="https://ye-buna.com/mktips" target="_blank" rel="noopener">MK Ebooks</a>
+                </div>
+                <p>© 2026 MK Tips. All rights reserved.</p>
+              </div>
+            </footer>
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+  </body>
+</html>
