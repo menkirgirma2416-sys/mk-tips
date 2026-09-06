@@ -67,6 +67,23 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
+  // Keyboard shortcut (Ctrl + Shift + A) and URL parameter (?admin=true) for Administrator Access
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+        e.preventDefault();
+        setIsAdminOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    if (window.location.search.includes('admin=true')) {
+      setIsAdminOpen(true);
+    }
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3200);
@@ -201,56 +218,71 @@ export default function App() {
         onCategorySelect={navigateToOpportunitiesCategory}
       />
 
-      {/* MAIN BODY: SWITCH PAGE VIEWS OR HOMEPAGE */}
-      <main className="container" style={{ flex: 1, padding: '28px 16px' }}>
-        {/* PAGE 1: DEDICATED OPPORTUNITIES PLATFORM */}
+      {/* MAIN VIEW CONTENT AREA */}
+      <div style={{ flex: 1 }}>
+        {/* VIEW 1: APPLY WITH US PAGE */}
+        {activeTab === 'ApplyWithUs' && (
+          <div className="container">
+            <ApplyWithUsPage />
+          </div>
+        )}
+
+        {/* VIEW 2: MK EBOOKS PAGE */}
+        {activeTab === 'Ebooks' && (
+          <div className="container">
+            <EbooksPage />
+          </div>
+        )}
+
+        {/* VIEW 3: ABOUT PAGE */}
+        {activeTab === 'About' && (
+          <div className="container">
+            <AboutPage />
+          </div>
+        )}
+
+        {/* VIEW 4: CONTACT PAGE */}
+        {activeTab === 'Contact' && (
+          <div className="container">
+            <ContactPage />
+          </div>
+        )}
+
+        {/* VIEW 5: SERVICES PAGE */}
+        {activeTab === 'Services' && (
+          <div className="container" style={{ paddingTop: '32px' }}>
+            <ServicesSection />
+          </div>
+        )}
+
+        {/* VIEW 6: DEDICATED OPPORTUNITIES FINDER PAGE */}
         {activeTab === 'Opportunities' && (
-          <div>
+          <div className="container" style={{ paddingTop: '32px', paddingBottom: '48px' }}>
             <FilterBar
               filters={filters}
               setFilters={setFilters}
-              resetFilters={resetFilters}
-              resultCount={filteredResults.length}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
               opportunities={opportunities}
+              resultsCount={filteredResults.length}
+              resetFilters={resetFilters}
             />
 
-            {/* Opportunities Grid */}
-            {filteredResults.length > 0 ? (
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '24px',
-                marginBottom: '48px'
-              }}>
-                {filteredResults.map((opp) => (
-                  <OpportunityCard
-                    key={opp.id}
-                    opportunity={opp}
-                    onSelect={(selected) => setSelectedOpportunity(selected)}
-                    onToggleCompare={toggleCompare}
-                    isCompared={compareList.some(i => i.id === opp.id)}
-                    onToggleBookmark={toggleBookmark}
-                    isBookmarked={bookmarksList.some(i => i.id === opp.id)}
-                  />
-                ))}
-              </div>
-            ) : (
+            {filteredResults.length === 0 ? (
               <div style={{
                 backgroundColor: '#ffffff',
                 border: '1px solid #e2e8f0',
                 borderRadius: '24px',
-                padding: '48px 24px',
+                padding: '60px 24px',
                 textAlign: 'center',
-                maxWidth: '650px',
-                margin: '32px auto',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.03)'
+                boxShadow: '0 4px 14px rgba(15,23,42,0.04)'
               }}>
-                <SearchX size={32} color="#ef4444" style={{ margin: '0 auto 16px' }} />
+                <SearchX size={48} color="#94a3b8" style={{ margin: '0 auto 16px' }} />
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', marginBottom: '8px' }}>
-                  No opportunities match those selected filters.
+                  No Matching Opportunities Found
                 </h3>
-                <p style={{ fontSize: '0.95rem', color: '#64748b', marginBottom: '24px' }}>
-                  Try resetting your filter selection to explore all available verified programs.
+                <p style={{ fontSize: '0.92rem', color: '#64748b', maxWidth: '480px', margin: '0 auto 20px' }}>
+                  Try adjusting your filter criteria, resetting specific dropdowns, or searching for broader terms.
                 </p>
                 <button
                   onClick={resetFilters}
@@ -259,43 +291,40 @@ export default function App() {
                     color: '#ffffff',
                     padding: '10px 20px',
                     borderRadius: '12px',
+                    fontSize: '0.88rem',
                     fontWeight: 800,
                     border: 'none',
                     cursor: 'pointer'
                   }}
                 >
-                  Browse All Opportunities
+                  Clear All Filters
                 </button>
               </div>
+            ) : (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                gap: '24px'
+              }}>
+                {filteredResults.map(opp => (
+                  <OpportunityCard
+                    key={opp.id}
+                    opportunity={opp}
+                    onViewDetails={() => setSelectedOpportunity(opp)}
+                    onToggleCompare={() => toggleCompare(opp)}
+                    isCompared={compareList.some(item => item.id === opp.id)}
+                    onToggleBookmark={() => toggleBookmark(opp)}
+                    isBookmarked={bookmarksList.some(item => item.id === opp.id)}
+                  />
+                ))}
+              </div>
             )}
-
-            {/* Real-Time Deadline Tracker Section */}
-            <DeadlineTracker
-              opportunities={opportunities}
-              onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
-            />
           </div>
         )}
 
-        {/* PAGE 2: DEDICATED SERVICES PAGE */}
-        {activeTab === 'Services' && <ServicesSection />}
-
-        {/* PAGE 3: DEDICATED APPLY WITH US PAGE */}
-        {activeTab === 'ApplyWithUs' && <ApplyWithUsPage />}
-
-        {/* PAGE 4: DEDICATED MK EBOOKS PAGE */}
-        {activeTab === 'Ebooks' && <EbooksPage />}
-
-        {/* PAGE 5: DEDICATED ABOUT PAGE */}
-        {activeTab === 'About' && <AboutPage />}
-
-        {/* PAGE 6: DEDICATED CONTACT PAGE */}
-        {activeTab === 'Contact' && <ContactPage />}
-
-        {/* PAGE 7: HOMEPAGE */}
+        {/* VIEW 7: HOMEPAGE (ALL SECTIONS INTEGRATED) */}
         {activeTab === 'Home' && (
-          <>
-            {/* 1. Hero / Welcome Section */}
+          <div>
             <HeroSection
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -306,242 +335,163 @@ export default function App() {
               onExploreEbooksClick={() => setActiveTab('Ebooks')}
             />
 
-            {/* 2. Opportunity Finder Preview */}
-            <div style={{
-              backgroundColor: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '24px',
-              padding: '24px 32px',
-              marginBottom: '48px',
-              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.03)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: '16px'
-            }}>
-              <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', marginBottom: '4px' }}>
-                  <Sparkles size={14} color="#2563eb" />
-                  <span>DISCOVER & FILTER</span>
-                </div>
-                <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                  Opportunity Finder & Live Filter Engine
-                </h3>
-              </div>
+            <div className="container">
+              {/* Campaign Announcement */}
+              <CampaignSection onApplyClick={() => setActiveTab('ApplyWithUs')} />
 
-              <button
-                onClick={() => setActiveTab('Opportunities')}
-                style={{
-                  backgroundColor: '#2563eb',
-                  color: '#ffffff',
-                  padding: '12px 24px',
-                  borderRadius: '12px',
-                  fontSize: '0.9rem',
-                  fontWeight: 800,
-                  display: 'inline-flex',
+              {/* Opportunity Finder Section */}
+              <div style={{ marginBottom: '48px' }}>
+                <div style={{
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <span>Launch Opportunity Finder</span>
-                <ArrowRight size={16} />
-              </button>
-            </div>
-
-            {/* 3. Featured Opportunities */}
-            <div style={{ marginBottom: '48px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#b45309', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', marginBottom: '4px' }}>
-                    <Star size={14} color="#f59e0b" />
-                    <span>CURATED HIGHLIGHTS</span>
-                  </div>
-                  <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                    Featured Opportunities
-                  </h2>
-                </div>
-
-                <button
-                  onClick={() => setActiveTab('Opportunities')}
-                  style={{
-                    backgroundColor: '#eff6ff',
-                    color: '#2563eb',
-                    border: '1px solid #bfdbfe',
-                    padding: '8px 16px',
-                    borderRadius: '10px',
-                    fontSize: '0.88rem',
-                    fontWeight: 800,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <span>Explore All Program Types</span>
-                  <ArrowRight size={14} />
-                </button>
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '24px'
-              }}>
-                {(featuredOpportunities.length > 0 ? featuredOpportunities : opportunities.slice(0, 6)).map((opp) => (
-                  <OpportunityCard
-                    key={opp.id}
-                    opportunity={opp}
-                    onSelect={(selected) => setSelectedOpportunity(selected)}
-                    onToggleCompare={toggleCompare}
-                    isCompared={compareList.some(i => i.id === opp.id)}
-                    onToggleBookmark={toggleBookmark}
-                    isBookmarked={bookmarksList.some(i => i.id === opp.id)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* 4. Latest Opportunities */}
-            <div style={{ marginBottom: '48px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
-                <div>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', color: '#2563eb', fontWeight: 800, fontSize: '0.78rem', textTransform: 'uppercase', marginBottom: '4px' }}>
-                    <Compass size={14} color="#2563eb" />
-                    <span>AUTHENTIC INTERNATIONAL PROGRAMS</span>
-                  </div>
-                  <h2 style={{ fontSize: '2rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                    Latest Opportunities
-                  </h2>
-                </div>
-              </div>
-
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '24px'
-              }}>
-                {opportunities.slice(0, 6).map((opp) => (
-                  <OpportunityCard
-                    key={opp.id}
-                    opportunity={opp}
-                    onSelect={(selected) => setSelectedOpportunity(selected)}
-                    onToggleCompare={toggleCompare}
-                    isCompared={compareList.some(i => i.id === opp.id)}
-                    onToggleBookmark={toggleBookmark}
-                    isBookmarked={bookmarksList.some(i => i.id === opp.id)}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* 5. Deadline Tracker / Closing Soon */}
-            <DeadlineTracker
-              opportunities={opportunities}
-              onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
-            />
-
-            {/* 6. Services */}
-            <ServicesSection />
-
-            {/* 7. MK Ebooks */}
-            <EbooksSection onExploreEbooksClick={() => setActiveTab('Ebooks')} />
-
-            {/* 8. About MK Tips (WITH OFFICIAL LOGO DISPLAY) */}
-            <div style={{
-              backgroundColor: '#ffffff',
-              border: '1px solid #e2e8f0',
-              borderRadius: '24px',
-              padding: '36px 32px',
-              marginBottom: '48px',
-              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.04)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', marginBottom: '20px' }}>
-                {/* Official MK Tips Logo Header in About Card */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                  <img 
-                    src="/assets/images/mk-tips-logo.png" 
-                    alt="MK Tips Official Logo" 
-                    onError={(e) => { 
-                      if (e.target.src !== LOGO_DATA_URI) {
-                        e.target.src = LOGO_DATA_URI;
-                      }
-                    }}
-                    style={{
-                      maxHeight: '48px',
-                      maxWidth: '190px',
-                      objectFit: 'contain'
-                    }}
-                  />
-                  <div style={{ width: '1px', height: '32px', backgroundColor: '#e2e8f0' }} className="hidden sm:block"></div>
+                  justifyContent: 'space-between',
+                  marginBottom: '20px',
+                  flexWrap: 'wrap',
+                  gap: '12px'
+                }}>
                   <div>
-                    <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                      About MK Tips
-                    </h3>
-                    <div style={{ fontSize: '0.85rem', color: '#2563eb', fontWeight: 700 }}>
-                      Educational Guidance Platform for Ethiopian Applicants
-                    </div>
+                    <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Explore Global Opportunities
+                    </h2>
+                    <p style={{ fontSize: '0.9rem', color: '#64748b', margin: '4px 0 0' }}>
+                      Filter by degree level, funding coverage, application fee, and host country.
+                    </p>
                   </div>
+
+                  <button
+                    onClick={() => setActiveTab('Opportunities')}
+                    style={{
+                      backgroundColor: '#eff6ff',
+                      color: '#2563eb',
+                      border: '1px solid #bfdbfe',
+                      padding: '8px 16px',
+                      borderRadius: '12px',
+                      fontSize: '0.85rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>Open Full Opportunity Finder</span>
+                    <ArrowRight size={14} />
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => setActiveTab('About')}
-                  style={{
-                    backgroundColor: '#0f172a',
-                    color: '#ffffff',
-                    padding: '10px 20px',
-                    borderRadius: '12px',
-                    fontSize: '0.85rem',
-                    fontWeight: 800,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    border: 'none',
-                    cursor: 'pointer'
-                  }}
-                >
-                  <span>Full About Overview</span>
-                  <ArrowRight size={16} />
-                </button>
+                <FilterBar
+                  filters={filters}
+                  setFilters={setFilters}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  opportunities={opportunities}
+                  resultsCount={filteredResults.length}
+                  resetFilters={resetFilters}
+                />
+
+                {/* Homepage Opportunities Grid */}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                  gap: '24px'
+                }}>
+                  {filteredResults.slice(0, 6).map(opp => (
+                    <OpportunityCard
+                      key={opp.id}
+                      opportunity={opp}
+                      onViewDetails={() => setSelectedOpportunity(opp)}
+                      onToggleCompare={() => toggleCompare(opp)}
+                      isCompared={compareList.some(item => item.id === opp.id)}
+                      onToggleBookmark={() => toggleBookmark(opp)}
+                      isBookmarked={bookmarksList.some(item => item.id === opp.id)}
+                    />
+                  ))}
+                </div>
               </div>
 
-              <p style={{ fontSize: '0.96rem', color: '#334155', lineHeight: 1.7, margin: 0 }}>
-                MK Tips is an educational guidance platform focused on helping Ethiopian students and applicants discover and pursue international scholarships, fellowships, internships, conferences, online courses and other educational opportunities. Our mission is to make international education opportunities easier to discover and understand for Ethiopian applicants.
-              </p>
+              {/* Featured Opportunities Section */}
+              {featuredOpportunities.length > 0 && (
+                <div style={{ marginBottom: '48px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
+                    <Star size={20} color="#f59e0b" fill="#f59e0b" />
+                    <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                      Featured Global Programs
+                    </h2>
+                  </div>
+
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                    gap: '24px'
+                  }}>
+                    {featuredOpportunities.map(opp => (
+                      <OpportunityCard
+                        key={`featured-${opp.id}`}
+                        opportunity={opp}
+                        onViewDetails={() => setSelectedOpportunity(opp)}
+                        onToggleCompare={() => toggleCompare(opp)}
+                        isCompared={compareList.some(item => item.id === opp.id)}
+                        onToggleBookmark={() => toggleBookmark(opp)}
+                        isBookmarked={bookmarksList.some(item => item.id === opp.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Integrated Closing Soon Deadline Tracker */}
+              <DeadlineTracker
+                opportunities={opportunities}
+                onSelectOpportunity={(opp) => setSelectedOpportunity(opp)}
+              />
+
+              {/* Services Section */}
+              <ServicesSection />
+
+              {/* MK Ebooks Section */}
+              <EbooksSection onExploreEbooksClick={() => setActiveTab('Ebooks')} />
+
+              {/* Why Choose MK Tips */}
+              <WhyMkTips />
+
+              {/* Apply Process Checklist */}
+              <ApplyProcessSection onApplyClick={() => setActiveTab('ApplyWithUs')} />
+
+              {/* Telegram Channel CTA */}
+              <TelegramSection />
             </div>
-
-            {/* 9. Telegram / Contact CTA */}
-            <TelegramSection />
-          </>
+          </div>
         )}
-      </main>
+      </div>
 
-      {/* 10. Footer */}
+      {/* FOOTER */}
       <Footer setActiveTab={setActiveTab} />
 
-      {/* MODALS */}
+      {/* MODAL DIALOGS */}
+
+      {/* 1. Opportunity Details Modal (6 Tabs) */}
       {selectedOpportunity && (
         <OpportunityDetailModal
           opportunity={selectedOpportunity}
           onClose={() => setSelectedOpportunity(null)}
-          onToggleCompare={toggleCompare}
-          isCompared={compareList.some(i => i.id === selectedOpportunity.id)}
-          onToggleBookmark={toggleBookmark}
-          isBookmarked={bookmarksList.some(i => i.id === selectedOpportunity.id)}
+          onApplyClick={() => setActiveTab('ApplyWithUs')}
         />
       )}
 
+      {/* 2. Side-by-Side Comparison Modal */}
       {isCompareOpen && (
         <ComparisonModal
           compareList={compareList}
           onClose={() => setIsCompareOpen(false)}
-          onRemoveFromCompare={(id) => setCompareList(prev => prev.filter(i => i.id !== id))}
-          onClearAll={() => setCompareList([])}
+          onRemove={(id) => toggleCompare(compareList.find(c => c.id === id))}
+          onViewDetails={(opp) => {
+            setIsCompareOpen(false);
+            setSelectedOpportunity(opp);
+          }}
         />
       )}
 
+      {/* 3. Real Admin Management Engine Portal Modal */}
       {isAdminOpen && (
         <AdminPortal
           opportunities={opportunities}

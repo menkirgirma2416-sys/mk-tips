@@ -61,7 +61,7 @@ export default function AdminPortal({
       setIsAuthenticated(true);
       setAuthError('');
     } else {
-      setAuthError('Incorrect Admin Password. (Default: mktips2026)');
+      setAuthError('Incorrect password.');
     }
   };
 
@@ -142,7 +142,7 @@ export default function AdminPortal({
               MK Tips Admin Portal
             </h3>
             <p style={{ fontSize: '0.85rem', color: '#64748b', margin: 0 }}>
-              Enter administrator key to manage opportunity records.
+              Enter administrator password to manage opportunity records.
             </p>
           </div>
 
@@ -155,7 +155,7 @@ export default function AdminPortal({
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password (mktips2026)"
+                placeholder="Enter admin password"
                 style={{
                   width: '100%', padding: '12px 14px', borderRadius: '12px',
                   border: '1px solid #cbd5e1', fontSize: '0.9rem', outline: 'none'
@@ -172,12 +172,12 @@ export default function AdminPortal({
             <button
               type="submit"
               style={{
-                backgroundColor: '#0f172a', color: '#ffffff',
-                padding: '12px', borderRadius: '12px', fontSize: '0.9rem',
-                fontWeight: 800, border: 'none', cursor: 'pointer'
+                backgroundColor: '#0f172a', color: '#ffffff', padding: '14px',
+                borderRadius: '12px', border: 'none', fontWeight: 800,
+                fontSize: '0.92rem', cursor: 'pointer', marginTop: '6px'
               }}
             >
-              Authenticate & Access Admin
+              Authenticate Access
             </button>
           </form>
         </div>
@@ -200,33 +200,34 @@ export default function AdminPortal({
       <div style={{
         backgroundColor: '#ffffff',
         borderRadius: '24px',
-        maxWidth: '980px',
+        maxWidth: '920px',
         width: '100%',
-        maxHeight: '92vh',
-        overflowY: 'auto',
+        maxHeight: '90vh',
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)',
         position: 'relative',
-        boxShadow: '0 25px 50px -12px rgba(0,0,0,0.3)'
+        overflow: 'hidden'
       }}>
-        {/* Header */}
+        {/* Modal Header */}
         <div style={{
-          backgroundColor: '#0f172a',
-          color: '#ffffff',
           padding: '24px 32px',
-          borderTopLeftRadius: '24px',
-          borderTopRightRadius: '24px',
+          borderBottom: '1px solid #e2e8f0',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          backgroundColor: '#0f172a',
+          color: '#ffffff'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <ShieldCheck size={26} color="#38bdf8" />
             <div>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                MK Tips Opportunity Management Engine
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
+                MK Tips Administrator Portal
               </h3>
-              <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: 0 }}>
-                Total Records: <strong>{opportunities.length}</strong> | Real-time persistence active
-              </p>
+              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                Manage live opportunity records, deadlines, and publishing status.
+              </span>
             </div>
           </div>
 
@@ -234,62 +235,77 @@ export default function AdminPortal({
             onClick={onClose}
             style={{
               backgroundColor: 'rgba(255,255,255,0.1)',
-              border: 'none', borderRadius: '50%',
-              width: '36px', height: '36px',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: '#ffffff', cursor: 'pointer'
+              border: 'none',
+              color: '#ffffff',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Tab Sub-header */}
-        <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', backgroundColor: '#f8fafc', padding: '0 24px' }}>
+        {/* Tab Navigation */}
+        <div style={{
+          display: 'flex',
+          gap: '12px',
+          padding: '16px 32px',
+          backgroundColor: '#f8fafc',
+          borderBottom: '1px solid #e2e8f0'
+        }}>
           <button
-            onClick={() => setActiveTab('list')}
+            onClick={() => { setActiveTab('list'); setEditingId(null); }}
             style={{
-              padding: '14px 20px', border: 'none',
-              borderBottom: activeTab === 'list' ? '3px solid #2563eb' : '3px solid transparent',
-              backgroundColor: 'transparent',
-              color: activeTab === 'list' ? '#2563eb' : '#64748b',
-              fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer'
+              backgroundColor: activeTab === 'list' ? '#2563eb' : '#ffffff',
+              color: activeTab === 'list' ? '#ffffff' : '#475569',
+              border: activeTab === 'list' ? 'none' : '1px solid #cbd5e1',
+              padding: '8px 16px',
+              borderRadius: '10px',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              cursor: 'pointer'
             }}
           >
-            All Opportunities List ({opportunities.length})
+            Opportunity Records ({opportunities.length})
           </button>
 
           <button
-            onClick={() => {
-              setEditingId(null);
-              setFormData(initialFormState);
-              setActiveTab('add');
-            }}
+            onClick={() => { setActiveTab('add'); setEditingId(null); setFormData(initialFormState); }}
             style={{
-              padding: '14px 20px', border: 'none',
-              borderBottom: activeTab === 'add' ? '3px solid #2563eb' : '3px solid transparent',
-              backgroundColor: 'transparent',
-              color: activeTab === 'add' ? '#2563eb' : '#64748b',
-              fontWeight: 800, fontSize: '0.88rem', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: '6px'
+              backgroundColor: activeTab === 'add' ? '#2563eb' : '#ffffff',
+              color: activeTab === 'add' ? '#ffffff' : '#475569',
+              border: activeTab === 'add' ? 'none' : '1px solid #cbd5e1',
+              padding: '8px 16px',
+              borderRadius: '10px',
+              fontSize: '0.85rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
             }}
           >
             <Plus size={16} />
-            <span>Add New Opportunity Record</span>
+            <span>Add Opportunity Record</span>
           </button>
         </div>
 
-        {/* Body Content */}
-        <div style={{ padding: '28px' }}>
-          {/* TAB 1: LIST */}
+        {/* Modal Body */}
+        <div style={{ padding: '24px 32px', overflowY: 'auto', flex: 1 }}>
+          {/* TAB 1: LIST RECORDS */}
           {activeTab === 'list' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {opportunities.map((opp) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {opportunities.map(opp => (
                 <div key={opp.id} style={{
                   backgroundColor: '#f8fafc',
                   border: '1px solid #e2e8f0',
                   borderRadius: '16px',
-                  padding: '16px 20px',
+                  padding: '18px 20px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -298,60 +314,55 @@ export default function AdminPortal({
                 }}>
                   <div style={{ flex: 1, minWidth: '240px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                      <span style={{ backgroundColor: opp.published !== false ? '#ecfdf5' : '#fef2f2', color: opp.published !== false ? '#047857' : '#ef4444', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px' }}>
+                      <span style={{
+                        backgroundColor: opp.published !== false ? '#ecfdf5' : '#fef2f2',
+                        color: opp.published !== false ? '#047857' : '#b91c1c',
+                        fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px'
+                      }}>
                         {opp.published !== false ? 'PUBLISHED' : 'DRAFT'}
                       </span>
+
                       {opp.featured && (
                         <span style={{ backgroundColor: '#fffbeb', color: '#b45309', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px' }}>
                           ★ FEATURED
                         </span>
                       )}
+
                       <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 700 }}>
                         {opp.type} • {opp.country}
                       </span>
                     </div>
 
-                    <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 2px' }}>
+                    <h4 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#0f172a', margin: '0 0 4px' }}>
                       {opp.name}
                     </h4>
-                    <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
-                      📅 Deadline: {opp.deadline} | Status: <strong>{opp.status}</strong>
+
+                    <div style={{ fontSize: '0.82rem', color: '#64748b' }}>
+                      Deadline: <strong>{opp.deadline}</strong> | Verified: <strong>{opp.last_verified || 'Recent'}</strong>
                     </div>
                   </div>
 
+                  {/* Actions */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <button
-                      onClick={() => onUpdateOpportunity(opp.id, { featured: !opp.featured })}
-                      title="Toggle Featured"
+                      onClick={() => onMarkVerified(opp.id)}
+                      title="Mark Verified Today"
                       style={{
-                        backgroundColor: opp.featured ? '#f59e0b' : '#ffffff',
-                        color: opp.featured ? '#ffffff' : '#64748b',
-                        border: '1px solid #cbd5e1', borderRadius: '8px', padding: '6px 12px',
-                        fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer'
+                        backgroundColor: '#eff6ff', color: '#2563eb', border: '1px solid #bfdbfe',
+                        padding: '6px 12px', borderRadius: '8px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '4px'
                       }}
                     >
-                      ★ {opp.featured ? 'Featured' : 'Feature'}
-                    </button>
-
-                    <button
-                      onClick={() => onUpdateOpportunity(opp.id, { published: opp.published === false ? true : false })}
-                      style={{
-                        backgroundColor: opp.published !== false ? '#ecfdf5' : '#fef2f2',
-                        color: opp.published !== false ? '#047857' : '#ef4444',
-                        border: '1px solid #cbd5e1', borderRadius: '8px', padding: '6px 12px',
-                        fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer'
-                      }}
-                    >
-                      {opp.published !== false ? 'Unpublish' : 'Publish'}
+                      <CheckCircle2 size={14} />
+                      <span>Verify</span>
                     </button>
 
                     <button
                       onClick={() => handleStartEdit(opp)}
                       style={{
-                        backgroundColor: '#2563eb', color: '#ffffff',
-                        border: 'none', borderRadius: '8px', padding: '6px 12px',
-                        fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer',
-                        display: 'inline-flex', alignItems: 'center', gap: '4px'
+                        backgroundColor: '#ffffff', color: '#0f172a', border: '1px solid #cbd5e1',
+                        padding: '6px 12px', borderRadius: '8px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '4px'
                       }}
                     >
                       <Edit size={14} />
@@ -359,11 +370,15 @@ export default function AdminPortal({
                     </button>
 
                     <button
-                      onClick={() => onDeleteOpportunity(opp.id)}
+                      onClick={() => {
+                        if (confirm(`Are you sure you want to delete "${opp.name}" permanently?`)) {
+                          onDeleteOpportunity(opp.id);
+                        }
+                      }}
                       style={{
-                        backgroundColor: '#fef2f2', color: '#ef4444',
-                        border: '1px solid #fecaca', borderRadius: '8px', padding: '6px 10px',
-                        fontSize: '0.78rem', fontWeight: 800, cursor: 'pointer'
+                        backgroundColor: '#fef2f2', color: '#ef4444', border: '1px solid #fecaca',
+                        padding: '6px 10px', borderRadius: '8px', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', gap: '4px'
                       }}
                     >
                       <Trash2 size={14} />
@@ -374,56 +389,56 @@ export default function AdminPortal({
             </div>
           )}
 
-          {/* TAB 2: ADD / EDIT FORM */}
+          {/* TAB 2 & 3: ADD / EDIT FORM */}
           {(activeTab === 'add' || activeTab === 'edit') && (
             <form onSubmit={handleSaveForm} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-              <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Opportunity Title / Name *
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Opportunity Name *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Organization / Provider *
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Organization / Host Provider *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.provider}
                   onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Host Country *
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Country *
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.country}
                   onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
                   Opportunity Type *
                 </label>
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 >
                   <option value="Scholarship">Scholarship</option>
                   <option value="Fellowship">Fellowship</option>
@@ -437,53 +452,48 @@ export default function AdminPortal({
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Target Study Level *
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Degree / Target Level *
                 </label>
                 <select
                   value={formData.degree_level}
                   onChange={(e) => setFormData({ ...formData, degree_level: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 >
                   <option value="Bachelor's">Bachelor's</option>
                   <option value="Master's">Master's</option>
                   <option value="PhD">PhD</option>
                   <option value="Postdoctoral">Postdoctoral</option>
-                  <option value="Professional">Professional</option>
-                  <option value="Other">Multiple / Open to participants</option>
+                  <option value="Other">Other / Multiple</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
                   Funding Type *
                 </label>
                 <select
                   value={formData.funding_type}
                   onChange={(e) => setFormData({ ...formData, funding_type: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 >
                   <option value="Fully Funded">Fully Funded</option>
                   <option value="Partially Funded">Partially Funded</option>
                   <option value="Tuition Fee Only">Tuition Fee Only</option>
                   <option value="Stipend Only">Stipend Only</option>
-                  <option value="Free">Free / 100% Free</option>
+                  <option value="Free">Free</option>
                   <option value="Unfunded">Unfunded</option>
                 </select>
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
                   Application Fee Status *
                 </label>
                 <select
                   value={formData.fee_status}
-                  onChange={(e) => setFormData({ 
-                    ...formData, 
-                    fee_status: e.target.value,
-                    application_fee: e.target.value === 'Application Fee Required'
-                  })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  onChange={(e) => setFormData({ ...formData, fee_status: e.target.value, application_fee: e.target.value === 'Application Fee Required' })}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 >
                   <option value="No Application Fee">No Application Fee ($0)</option>
                   <option value="Application Fee Required">Application Fee Required</option>
@@ -492,125 +502,97 @@ export default function AdminPortal({
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Current Status *
-                </label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
-                >
-                  <option value="Open">OPEN</option>
-                  <option value="Upcoming">UPCOMING</option>
-                  <option value="Closed">CLOSED</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Opening Date (YYYY-MM-DD)
-                </label>
-                <input
-                  type="date"
-                  value={formData.opening_date}
-                  onChange={(e) => setFormData({ ...formData, opening_date: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
-                />
-              </div>
-
-              <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Deadline Date (YYYY-MM-DD) *
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Deadline Date *
                 </label>
                 <input
                   type="date"
                   required
                   value={formData.deadline}
                   onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem', fontWeight: 700 }}
                 />
               </div>
 
-              <div style={{ gridColumn: 'span 2' }}>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Brief Card Description (2-3 sentences) *
+              <div style={{ gridColumn: '1 / -1' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Brief Card Description *
                 </label>
                 <textarea
                   required
-                  rows={3}
+                  rows="2"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.85rem' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Official Website Link
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Official Website URL
                 </label>
                 <input
                   type="url"
                   value={formData.official_website}
                   onChange={(e) => setFormData({ ...formData, official_website: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: '0.78rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
-                  Official Application Portal Link
+                <label style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>
+                  Official Application Link URL
                 </label>
                 <input
                   type="url"
                   value={formData.application_link}
                   onChange={(e) => setFormData({ ...formData, application_link: e.target.value })}
-                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.9rem' }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #cbd5e1', fontSize: '0.88rem' }}
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: '16px', alignItems: 'center', gridColumn: 'span 2' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer' }}>
+              {/* Toggles */}
+              <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '20px', alignItems: 'center', paddingTop: '8px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 700, color: '#1e293b', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={formData.moi_accepted}
                     onChange={(e) => setFormData({ ...formData, moi_accepted: e.target.checked })}
-                    style={{ width: '16px', height: '16px' }}
                   />
-                  <span>Medium of Instruction (MOI) Certificate Accepted</span>
+                  <span>Medium of Instruction (MOI) Accepted</span>
                 </label>
 
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 700, color: '#1e293b', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    style={{ width: '16px', height: '16px' }}
                   />
                   <span>Feature on Homepage</span>
                 </label>
+
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 700, color: '#1e293b', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={formData.published}
+                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                  />
+                  <span>Publish Record</span>
+                </label>
               </div>
 
-              <div style={{ gridColumn: 'span 2', display: 'flex', gap: '12px', justifyContent: 'flex-end', marginTop: '16px' }}>
+              {/* Buttons */}
+              <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'flex-end', gap: '12px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
                 <button
                   type="button"
                   onClick={() => setActiveTab('list')}
-                  style={{
-                    backgroundColor: '#f1f5f9', color: '#475569',
-                    padding: '12px 20px', borderRadius: '12px', fontSize: '0.9rem',
-                    fontWeight: 700, border: 'none', cursor: 'pointer'
-                  }}
+                  style={{ backgroundColor: '#f1f5f9', color: '#475569', border: 'none', padding: '10px 18px', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer' }}
                 >
                   Cancel
                 </button>
-
                 <button
                   type="submit"
-                  style={{
-                    backgroundColor: '#2563eb', color: '#ffffff',
-                    padding: '12px 28px', borderRadius: '12px', fontSize: '0.9rem',
-                    fontWeight: 800, border: 'none', cursor: 'pointer',
-                    display: 'inline-flex', alignItems: 'center', gap: '6px'
-                  }}
+                  style={{ backgroundColor: '#2563eb', color: '#ffffff', border: 'none', padding: '10px 24px', borderRadius: '10px', fontSize: '0.85rem', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
                 >
                   <Save size={16} />
                   <span>Save Opportunity Record</span>

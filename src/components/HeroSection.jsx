@@ -2,14 +2,21 @@ import React from 'react';
 import { Search, Sparkles, GraduationCap, Globe, BookOpen, ShieldCheck, ArrowRight, CheckCircle2, Award, Users } from 'lucide-react';
 
 export default function HeroSection({
-  searchQuery,
-  setSearchQuery,
-  onSearchSubmit,
-  setActiveTab,
-  stats,
-  onExploreOpportunitiesClick,
-  onExploreEbooksClick
+  searchQuery = '',
+  setSearchQuery = () => {},
+  onSearchSubmit = () => {},
+  setActiveTab = () => {},
+  stats = { total: 5, fullyFunded: 4, noFee: 5, altEnglishAccepted: 4 },
+  onExploreOpportunitiesClick = () => {},
+  onExploreEbooksClick = () => {}
 }) {
+  const safeStats = {
+    total: stats?.total ?? 5,
+    fullyFunded: stats?.fullyFunded ?? 4,
+    noFee: stats?.noFee ?? 5,
+    altEnglishAccepted: stats?.altEnglishAccepted ?? 4
+  };
+
   return (
     <section style={{
       backgroundColor: '#0f172a',
@@ -249,22 +256,22 @@ export default function HeroSection({
                 marginBottom: '20px'
               }}>
                 <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '14px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#60a5fa' }}>{stats.total}+</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#60a5fa' }}>{safeStats.total}+</div>
                   <div style={{ fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 600 }}>Active Programs</div>
                 </div>
 
-                <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '14px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#10b981' }}>{stats.fullyFunded}</div>
+                <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255, 23, 42, 0.6)', borderRadius: '14px', padding: '14px' }}>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#10b981' }}>{safeStats.fullyFunded}</div>
                   <div style={{ fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 600 }}>Fully Funded</div>
                 </div>
 
                 <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '14px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fbbf24' }}>{stats.noFee}</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#fbbf24' }}>{safeStats.noFee}</div>
                   <div style={{ fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 600 }}>Zero Fee ($0)</div>
                 </div>
 
                 <div style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '14px', padding: '14px' }}>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#38bdf8' }}>{stats.altEnglishAccepted}</div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#38bdf8' }}>{safeStats.altEnglishAccepted}</div>
                   <div style={{ fontSize: '0.78rem', color: '#cbd5e1', fontWeight: 600 }}>Alt English Proof</div>
                 </div>
               </div>

@@ -85,11 +85,11 @@ export default function Header({
       </div>
 
       {/* Main Navbar */}
-      <div className="container" style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {/* Logo (Moderately Enlarged) */}
+      <div className="container" style={{ height: '80px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+        {/* Logo */}
         <div 
           onClick={() => setActiveTab('Home')}
-          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
+          style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}
         >
           <img 
             src="/assets/images/mk-tips-logo.png" 
@@ -100,15 +100,15 @@ export default function Header({
               }
             }}
             style={{
-              maxHeight: '56px',
-              maxWidth: '250px',
+              maxHeight: '52px',
+              maxWidth: '220px',
               objectFit: 'contain'
             }}
           />
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex" style={{ alignItems: 'center', gap: '6px' }}>
+        {/* Desktop Navigation — Single Horizontal Row */}
+        <nav className="hidden lg:flex" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'nowrap', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
           {mainNavItems.map((item) => {
             const isActive = activeTab === item.id;
             
@@ -130,20 +130,21 @@ export default function Header({
                   style={{
                     backgroundColor: isActive ? '#eff6ff' : 'transparent',
                     color: isActive ? '#2563eb' : '#1e293b',
-                    padding: '8px 14px',
+                    padding: '8px 12px',
                     borderRadius: '10px',
-                    fontSize: '0.92rem',
+                    fontSize: '0.85rem',
                     fontWeight: 800,
+                    whiteSpace: 'nowrap',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
+                    gap: '3px',
                     border: 'none',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
                   <span>{item.label}</span>
-                  {item.hasDropdown && <ChevronDown size={14} color={isActive ? '#2563eb' : '#64748b'} />}
+                  {item.hasDropdown && <ChevronDown size={13} color={isActive ? '#2563eb' : '#64748b'} />}
                 </button>
 
                 {/* Opportunities Mega Menu */}
@@ -198,14 +199,14 @@ export default function Header({
         </nav>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {compareList.length > 0 && (
             <button
               onClick={openCompareModal}
               style={{
                 backgroundColor: '#f1f5f9',
                 color: '#0f172a',
-                padding: '8px 14px',
+                padding: '8px 12px',
                 borderRadius: '10px',
                 fontSize: '0.82rem',
                 fontWeight: 800,
@@ -251,31 +252,43 @@ export default function Header({
             style={{
               backgroundColor: '#2563eb',
               color: '#ffffff',
-              padding: '10px 18px',
-              borderRadius: '12px',
-              fontSize: '0.88rem',
+              padding: '8px 16px',
+              borderRadius: '10px',
+              fontSize: '0.85rem',
               fontWeight: 800,
+              alignItems: 'center',
+              gap: '6px',
               textDecoration: 'none',
-              boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+              boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)'
             }}
           >
-            Apply Now ↗
+            <span>Apply Now</span>
+            <ExternalLink size={14} />
           </a>
 
-          {/* Mobile Hamburger Toggle */}
+          {/* Mobile Menu Button */}
           <button
-            className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            style={{ backgroundColor: 'transparent', border: 'none', padding: '6px', cursor: 'pointer' }}
+            className="lg:hidden"
+            style={{
+              backgroundColor: '#f8fafc',
+              border: '1px solid #cbd5e1',
+              borderRadius: '10px',
+              padding: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
-            {isMobileMenuOpen ? <X size={24} color="#0f172a" /> : <Menu size={24} color="#0f172a" />}
+            {isMobileMenuOpen ? <X size={20} color="#0f172a" /> : <Menu size={20} color="#0f172a" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {isMobileMenuOpen && (
-        <div style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e2e8f0', padding: '16px' }} className="md:hidden">
+        <div style={{ backgroundColor: '#ffffff', borderTop: '1px solid #e2e8f0', padding: '16px 20px 24px' }} className="lg:hidden">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {mainNavItems.map((item) => (
               <button
@@ -287,12 +300,12 @@ export default function Header({
                 style={{
                   width: '100%',
                   textAlign: 'left',
-                  padding: '12px 16px',
-                  borderRadius: '10px',
                   backgroundColor: activeTab === item.id ? '#eff6ff' : 'transparent',
                   color: activeTab === item.id ? '#2563eb' : '#0f172a',
+                  padding: '10px 14px',
+                  borderRadius: '10px',
+                  fontSize: '0.92rem',
                   fontWeight: 800,
-                  fontSize: '0.95rem',
                   border: 'none',
                   cursor: 'pointer'
                 }}
@@ -300,51 +313,6 @@ export default function Header({
                 {item.label}
               </button>
             ))}
-
-            <div style={{ paddingTop: '12px', borderTop: '1px solid #f1f5f9', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  openAdminModal();
-                }}
-                style={{
-                  width: '100%',
-                  backgroundColor: '#0f172a',
-                  color: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '10px',
-                  fontSize: '0.9rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  border: 'none'
-                }}
-              >
-                <ShieldCheck size={16} color="#38bdf8" />
-                <span>Admin Portal</span>
-              </button>
-
-              <a
-                href="https://forms.gle/gwHnj7gJvWNfUMSH7"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  width: '100%',
-                  backgroundColor: '#2563eb',
-                  color: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '10px',
-                  fontSize: '0.9rem',
-                  fontWeight: 800,
-                  textAlign: 'center',
-                  textDecoration: 'none'
-                }}
-              >
-                Apply With Us ↗
-              </a>
-            </div>
           </div>
         </div>
       )}
